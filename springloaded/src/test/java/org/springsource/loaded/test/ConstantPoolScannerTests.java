@@ -60,7 +60,6 @@ public class ConstantPoolScannerTests {
 	@Ignore
 	@Test
 	public void foo() throws Exception {
-
 		//		File[] filesToCheck = new File("../testdata-java8/bin").listFiles();
 		File[] filesToCheck = new File("/Users/aclement/play/rt71").listFiles();
 		//		File[] filesToCheck = new File("../testdata-groovy/bin").listFiles();

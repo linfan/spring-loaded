@@ -5,12 +5,11 @@ allprojects {
 
     repositories {
         mavenCentral()
-	maven {
-		url "https://maven.springframework.org/milestone"
-	}
+        maven {
+            url "http://maven.springframework.org/milestone"
+        }
     }
 }
-
 
 subprojects {
     apply plugin: 'java'
@@ -25,5 +24,5 @@ configure(subprojects.findAll { it.name.startsWith('testdata')}) {
 	tasks.findByPath("artifactoryPublish")?.enabled = false
 }
 task wrapper(type: Wrapper) {
-        gradleVersion = '3.4.1'
+    gradleVersion = '4.7'
 }

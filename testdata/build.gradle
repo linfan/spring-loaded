@@ -4,7 +4,7 @@ dependencies {
 	compile "org.aspectj:aspectjrt:$aspectjVersion"
 */
 	compile("cglib:cglib:2.2.2") { exclude group: 'asm' } // cglib 2.2.2 depends on asm 3.3
-        compile 'org.ow2.asm:asm:5.0_BETA'
+    compile 'org.ow2.asm:asm:5.0_BETA'
 	compile 'org.ow2.asm:asm-tree:5.0_BETA'
 	compile files("code.jar")
 }

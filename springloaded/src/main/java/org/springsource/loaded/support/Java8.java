@@ -74,6 +74,7 @@ public class Java8 {
 	 * Programmatic emulation of INVOKEDYNAMIC so initialize the callsite via use of the bootstrap method then invoke
 	 * the result.
 	 *
+	 * @param rtype reloadable type
 	 * @param executorClass the executor that will contain the lambda function, null if not yet reloaded
 	 * @param handle bootstrap method handle
 	 * @param bsmArgs bootstrap method arguments

@@ -92,7 +92,7 @@ public abstract class SpringLoadedTests implements Constants {
 
 	protected String TestDataAspectJPath = TestUtils.getPathToClasses("../testdata-aspectj");
 
-	protected String GroovyTestDataPath = TestUtils.getPathToClasses("../testdata-groovy");
+	protected String GroovyTestDataPath = TestUtils.getPathToClasses("../testdata-groovy", TestUtils.Lang.groovy);
 
 	protected String AspectjrtJar = "../testdata/aspectjrt.jar";
 

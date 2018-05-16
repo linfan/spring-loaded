@@ -49,7 +49,7 @@ public class TestClassloaderWithRewriting extends ClassLoader {
 
 	// @formatter:off
 	static String[] folders = new String[] {
-		TestUtils.getPathToClasses("../testdata-groovy")
+		TestUtils.getPathToClasses("../testdata-groovy", TestUtils.Lang.groovy)
 	};
 
 	static String[] jars = new String[] {

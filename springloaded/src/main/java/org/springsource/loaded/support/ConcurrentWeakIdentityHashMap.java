@@ -31,8 +31,8 @@ import java.util.concurrent.ConcurrentMap;
 /**
  *
  * @author zhanhb
- * @param <K>
- * @param <V>
+ * @param <K> Key
+ * @param <V> Value
  */
 public class ConcurrentWeakIdentityHashMap<K, V> extends AbstractMap<K, V>
         implements ConcurrentMap<K, V> {

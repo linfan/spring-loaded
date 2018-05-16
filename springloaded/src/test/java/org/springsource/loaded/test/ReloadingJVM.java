@@ -270,7 +270,7 @@ public class ReloadingJVM {
 			String classfile = classname.replaceAll("\\.", File.separator) + ".class";
 			File f = new File(TestUtils.getPathToClasses("../testdata"), classfile);
 			if (!f.exists()) {
-				f = new File(TestUtils.getPathToClasses("../testdata-groovy"), classfile);
+				f = new File(TestUtils.getPathToClasses("../testdata-groovy", TestUtils.Lang.groovy), classfile);
 			}
 			if (!f.exists()) {
 				f = new File(TestUtils.getPathToClasses("../testdata-java8"), classfile);
