@@ -69,10 +69,10 @@ public class ConstantPoolChecker2 {
 
 	private final static byte CONSTANT_InvokeDynamic = 18;
 
-	// Test entry point just goes through all the code in the bin folder
+	// Test entry point just goes through all the code in the out folder
 	public static void main(String[] args) throws Exception {
-		File[] fs = new File("./bin").listFiles();
-		//		File[] fs = new File("../testdata-groovy/bin").listFiles();
+		File[] fs = new File("./out").listFiles();
+		//		File[] fs = new File("../testdata-groovy/out").listFiles();
 		//		File[] fs = new File("/Users/aclement/grailsreload/foo/target/classes").listFiles();
 
 		checkThemAll(fs);

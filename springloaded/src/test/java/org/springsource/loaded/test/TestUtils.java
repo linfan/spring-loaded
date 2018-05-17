@@ -22,10 +22,10 @@ public class TestUtils {
 
 	public static String getPathToClasses(String path, Lang lang, Boolean isTestFolder) {
 		if (Boolean.parseBoolean(System.getProperty("springloaded.tests.useGradleBuildDir", "false"))) {
-			return path + "/build/classes/" + lang.name() + "/" + (isTestFolder ? "test" : "main");
+			return path + "/build/classes/" + lang.name() + (isTestFolder ? "/test" : "/main");
 		}
 		else {
-			return path + "/bin";
+			return path + "/out" + (isTestFolder ? "/test" : "/production") + "/classes";
 		}
 	}
 }

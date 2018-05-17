@@ -84,7 +84,7 @@ import org.springsource.loaded.test.infra.TestClassLoader;
 public abstract class SpringLoadedTests implements Constants {
 
 	/**
-	 * Classloader that can be used to see things in the bin directory, it is initialised ready for each test to use.
+	 * Classloader that can be used to see things in the out directory, it is initialised ready for each test to use.
 	 */
 	protected ClassLoader binLoader;
 

@@ -58,10 +58,10 @@ public class ConstantPoolChecker {
 
 	private final static byte CONSTANT_NameAndType = 12;
 
-	// Test entry point just goes through all the code in the bin folder
+	// Test entry point just goes through all the code in the out folder
 	public static void main(String[] args) throws Exception {
-		//		File[] fs = new File("./bin").listFiles();
-		//		File[] fs = new File("../testdata-groovy/bin").listFiles();
+		//		File[] fs = new File("./out").listFiles();
+		//		File[] fs = new File("../testdata-groovy/out").listFiles();
 		//		checkThemAll(fs);
 		//		System.out.println("total=" + total / 1000000d);
 	}
