@@ -16,6 +16,8 @@
 
 package org.springsource.loaded.agent;
 
+import org.springsource.loaded.remote.SpringLoadedRemoteServer;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 
@@ -39,14 +41,7 @@ public class SpringLoadedAgent {
 		}
 		instrumentation = inst;
 		instrumentation.addTransformer(transformer);
-	}
-
-	public static void agentmain(String options, Instrumentation inst) {
-		if (instrumentation != null) {
-			return;
-		}
-		instrumentation = inst;
-		instrumentation.addTransformer(transformer);
+		SpringLoadedRemoteServer.start();
 	}
 
 	/**
