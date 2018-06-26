@@ -40,7 +40,7 @@ public class SpringLoadedAgent {
 			return;
 		}
 		instrumentation = inst;
-		CmdOption option = parseOptions(options);
+		CmdOption option = CmdOption.fromStringArgs(options);
 
 		if (option.getClassNamePrefix() != null) {
 			((ClassPreProcessorAgentAdapter)transformer).setSlashSeparatedClassNamePrefix(option.getClassNamePrefix());
@@ -49,23 +49,6 @@ public class SpringLoadedAgent {
 			SpringLoadedRemoteServer.start();
 		}
 		instrumentation.addTransformer(transformer);
-	}
-
-	private static CmdOption parseOptions(String argOptions) {
-		final String PREFIX = "prefix:";
-		final String REMOTE = "remote";
-		CmdOption option = new CmdOption();
-		if (argOptions != null) {
-			String[] args = argOptions.split(";");
-			for (String arg : args) {
-				if (arg.startsWith(PREFIX)) {
-					option.setClassNamePrefix(arg.substring(PREFIX.length()));
-				} else if (arg.equals(REMOTE)) {
-					option.setEnableRemote(true);
-				}
-			}
-		}
-		return option;
 	}
 
 	/**
