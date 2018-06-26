@@ -41,6 +41,8 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 
 	private static ClassPreProcessorAgentAdapter instance;
 
+	private String slashSeparatedClassNamePrefix = null;
+
 	public ClassPreProcessorAgentAdapter() {
 		instance = this;
 	}
@@ -55,6 +57,10 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 		}
 	}
 
+	public void setSlashSeparatedClassNamePrefix(String prefix) {
+		this.slashSeparatedClassNamePrefix = prefix;
+	}
+
 	/**
 	 * @param loader the defining class loader
 	 * @param className the name of class being loaded
@@ -64,8 +70,11 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 	 * @return the weaved bytecode
 	 */
 	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-			ProtectionDomain protectionDomain,
-			byte[] bytes) throws IllegalClassFormatException {
+			ProtectionDomain protectionDomain, byte[] bytes) throws IllegalClassFormatException {
+
+		if (!matchPrefix(className)) {
+			return null;
+		}
 		try {
 			if (GlobalConfiguration.isRuntimeLogging && log.isLoggable(Level.INFO)) {
 				log.info("> (loader=" + loader + " className=" + className + ", classBeingRedefined="
@@ -110,6 +119,21 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 			new RuntimeException("Reloading agent exited via exception, please raise a jira", t).printStackTrace();
 			return bytes;
 		}
+	}
+
+	private boolean matchPrefix(String className) {
+		if (slashSeparatedClassNamePrefix == null) {
+			return true;
+		}
+		String[] prefixs = slashSeparatedClassNamePrefix.split(",");
+		boolean isMatch = false;
+		for (String prefix : prefixs) {
+			if (className.startsWith(prefix)) {
+				isMatch = true;
+				break;
+			}
+		}
+		return isMatch;
 	}
 
 	public static void reload(ClassLoader loader, String className, Class<?> classBeingRedefined,
