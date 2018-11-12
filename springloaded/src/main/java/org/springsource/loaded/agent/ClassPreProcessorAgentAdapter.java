@@ -41,8 +41,6 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 
 	private static ClassPreProcessorAgentAdapter instance;
 
-	private String slashSeparatedClassNamePrefix = null;
-
 	public ClassPreProcessorAgentAdapter() {
 		instance = this;
 	}
@@ -57,10 +55,6 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 		}
 	}
 
-	public void setSlashSeparatedClassNamePrefix(String prefix) {
-		this.slashSeparatedClassNamePrefix = prefix;
-	}
-
 	/**
 	 * @param loader the defining class loader
 	 * @param className the name of class being loaded
@@ -72,7 +66,10 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 	public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
 			ProtectionDomain protectionDomain, byte[] bytes) throws IllegalClassFormatException {
 
-		if (!matchPrefix(className)) {
+        if (isSystemEscapeClass(className)) {
+            return null;
+        }
+		if (isUserEscapeClass(className)) {
 			return null;
 		}
 		try {
@@ -121,19 +118,22 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 		}
 	}
 
-	private boolean matchPrefix(String className) {
-		if (slashSeparatedClassNamePrefix == null) {
-			return true;
+    private boolean isSystemEscapeClass(String className) {
+        return false;
+    }
+
+    private boolean isUserEscapeClass(String className) {
+		if (GlobalConfiguration.escapeClassPrefixList.size() < 1) {
+			return false;
 		}
-		String[] prefixs = slashSeparatedClassNamePrefix.split(",");
-		boolean isMatch = false;
-		for (String prefix : prefixs) {
-			if (className.startsWith(prefix)) {
-				isMatch = true;
-				break;
+		// Note: className is slash-separated format
+		String dotSeparatedClassName = className.replaceAll("/", ".");
+		for (String prefix : GlobalConfiguration.escapeClassPrefixList) {
+			if (dotSeparatedClassName.startsWith(prefix + ".")) {
+				return true;
 			}
 		}
-		return isMatch;
+		return false;
 	}
 
 	public static void reload(ClassLoader loader, String className, Class<?> classBeingRedefined,

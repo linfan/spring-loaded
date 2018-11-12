@@ -17,10 +17,7 @@
 package org.springsource.loaded;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +67,11 @@ public class GlobalConfiguration {
 	 * Can be turned on to enable users to determine the decision process around why something is not reloadable.
 	 */
 	public static boolean explainMode = false;
+
+    /**
+     * Auto add "/swap" api on 50998 port to enable trigger class swap remotely
+     */
+	public static boolean remoteMode = false;
 
 	/**
 	 * Once a type is found to be reloadable or not (based on whether it is accessible as a .class file on the disk
@@ -165,6 +167,11 @@ public class GlobalConfiguration {
 	 * List of dotted classnames representing classnames of plugins that should be loaded.
 	 */
 	public static List<String> pluginClassnameList;
+
+    /**
+     * List of class name prefix which should not be transformed
+     */
+	public static List<String> escapeClassPrefixList = new ArrayList<String>();
 
 	public final static boolean debugplugins;
 
@@ -323,6 +330,11 @@ public class GlobalConfiguration {
 								pluginClassnameList.add(pluginListTokenizer.nextToken());
 							}
 						}
+						else if (key.equals("escapePrefix")) {
+						    // escapePrefix=com.alibaba.midware,com.somethingelse
+                            String escapePrefixs = kv.substring(equals + 1);
+                            escapeClassPrefixList = parseEscapePrefixs(escapePrefixs);
+						}
 					}
 					else {
 						if (kv.equals("?")) {
@@ -347,6 +359,9 @@ public class GlobalConfiguration {
 							Log.log("[explain mode on] Reporting on the decision making process within SpringLoaded");
 							explainMode = true;
 						}
+						else if (kv.equals("remote")) {
+                            remoteMode = true;
+                        }
 					}
 				}
 			}
@@ -439,7 +454,13 @@ public class GlobalConfiguration {
 		debugplugins = debugPlugins;
 	}
 
-	private static int toInt(String value, int defaultValue) {
+    private static List<String> parseEscapePrefixs(String escapePrefixs) {
+	    List<String> escapePrefixList = new ArrayList<String>();
+        Collections.addAll(escapePrefixList, escapePrefixs.split(","));
+        return escapePrefixList;
+    }
+
+    private static int toInt(String value, int defaultValue) {
 		try {
 			return Integer.parseInt(value);
 		}

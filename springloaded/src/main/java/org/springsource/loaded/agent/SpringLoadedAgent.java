@@ -16,6 +16,7 @@
 
 package org.springsource.loaded.agent;
 
+import org.springsource.loaded.GlobalConfiguration;
 import org.springsource.loaded.remote.SpringLoadedRemoteServer;
 
 import java.lang.instrument.ClassFileTransformer;
@@ -40,12 +41,7 @@ public class SpringLoadedAgent {
 			return;
 		}
 		instrumentation = inst;
-		CmdOption option = CmdOption.fromStringArgs(options);
-
-		if (option.getClassNamePrefix() != null) {
-			((ClassPreProcessorAgentAdapter)transformer).setSlashSeparatedClassNamePrefix(option.getClassNamePrefix());
-		}
-		if (option.isEnableRemote()) {
+		if (GlobalConfiguration.remoteMode) {
 			SpringLoadedRemoteServer.start();
 		}
 		instrumentation.addTransformer(transformer);
