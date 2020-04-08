@@ -31,7 +31,7 @@ JAVA_OPTS="${JAVA_OPTS} -javaagent:/path/to/springloaded-{VERSION}.jar -noverify
 
 #### Springboot
 
-For springboot application, only unarchived jars are supported:
+For springboot application, you have to unarchived the jar, otherwise the class file replacement won't work:
 
 ```bash
 jar xf app.jar
