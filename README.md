@@ -11,84 +11,60 @@ can also be modified and it is possible to add/remove/change values in enum type
 Spring Loaded is usable on any bytecode that may run on a JVM, and is actually the reloading system
 used in Grails 2.
 
-# Installation
+## Build
 
-1.2.5 has now been released: [springloaded-1.2.5.RELEASE.jar](https://repo.spring.io/release/org/springframework/springloaded/1.2.5.RELEASE/springloaded-1.2.5.RELEASE.jar)
+```bash
+./gradlew clean build
+```
 
-1.2.6 snapshots are in this repo area (grab the most recently built .jar):
-<a href="https://repo.spring.io/webapp/#/artifacts/browse/tree/General/libs-snapshot-local/org/springframework/springloaded/1.2.6.BUILD-SNAPSHOT">repo.spring.io</a>
+Generated jar file `springloaded/build/libs/springloaded-{VERSION}.jar`
 
-The download is the agent jar and needs no further unpacking before use.
+## Use
 
+#### Tomcat
 
-# Running with reloading
+Add extra java options in `catalina.sh` before start
 
-	java -javaagent:<pathTo>/springloaded-{VERSION}.jar -noverify SomeJavaClass
+```bash
+JAVA_OPTS="${JAVA_OPTS} -javaagent:/path/to/springloaded-{VERSION}.jar -noverify"
+```
 
-The verifier is being turned off because some of the bytecode rewriting stretches the meaning of
-some of the bytecodes - in ways the JVM doesn't mind but the verifier doesn't like.  Once up and
-running what effectively happens is that any classes loaded from jar files (dependencies) are not
-treated as reloadable, whilst anything loaded from .class files on disk is made reloadable. Once
-loaded the .class file will be watched (once a second) and should a new version appear
-SpringLoaded will pick it up. Any live instances of that class will immediately see the new form
-of the object, the instances do not need to be discarded and recreated.
+#### Springboot
 
-No doubt that raises a lot of questions and hopefully a proper FAQ will appear here shortly! But in
-the meantime, here are some basic Qs and As:
+For springboot application, only unarchived jars are supported:
 
-Q. Does it reload anything that might change in a class file?
-A. No, you can't change the hierarchy of a type. Also there are certain constructor patterns of
-usage it can't actually handle right now.
+```bash
+jar xf app.jar
+java -javaagent:/path/to/springloaded-{VERSION}.jar -noverify pkg.to.MainClass
+```
 
-Q. With objects changing shape, what happens with respect to reflection?
-A. Reflection results change over time as the objects are reloaded.  For example, modifying a class
-with a new method and calling `getDeclaredMethods()` after reloading has occurred will mean you see
-the new method in the results. *But* this does mean if you have existing caches in your system
-that stash reflective information assuming it never changes, those will need to be cleared
-after a reload.
+## Verified functionality
 
-Q. How do I know when a reload has occurred so I can clear my state?
-A. You can write a plugin that is called when reloads occur and you can then take the appropriate
-action.  Create an implementation of `ReloadEventProcessorPlugin` and then register it via
-`SpringLoadedPreProcessor.registerGlobalPlugin(plugin)`. (There are other ways to register plugins,
-which will hopefully get some documentation!)
+**Works**
 
-Q. What's the state of the codebase?
-A. The technology is successfully being used by Grails for reloading. It does need some performance
-work and a few smacks with a refactoring hammer. It needs upgrading here and there to tolerate
-the invokedynamic instruction and associated new constant pool entries that arrived in Java 7.
+- Change method body (include construction method)
+- Add method
+- Remove method
+- Add static member variable
+- Add non-static member variable
+- Add construction method without parameter
+- Add new class/interface/enum
+- Add or modify enum item
+- Add or remove class annotation
+- Add or remove method in interface
+- Modify non-static member variable
 
-# Working with the code
+**Won't work**
 
-	git clone https://github.com/spring-projects/spring-loaded
+- Modify main method
+- Add construction method with parameter
+- Modify static member variable
 
-Once cloned there will be some projects suitable for import into eclipse. The main project and
-some test projects. One of the test projects is an AspectJ project (containing both Java
-and AspectJ code), and one is a Groovy project. To compile these test projects
-in Eclipse you will need the relevant eclipse plugins:
+**Won't work and cause exception**
 
-AJDT: update site: `https://download.eclipse.org/tools/ajdt/42/dev/update`
-Groovy-Eclipse: update site: `https://dist.springsource.org/snapshot/GRECLIPSE/e4.2/`
+- Add or modify class inherit relationship
+- Add or modify implemented interface list of class
 
-After importing them you can run the tests.  There are two kinds of tests, hand crafted and
-generated.  Running all the tests including the generated ones can take a while.
-To run just the hand crafted ones supply this to the JVM when launching the tests:
+## More information
 
-    -Dspringloaded.tests.generatedTests=false
-
-NOTE: When running the tests you need to pass `-noverify` to the JVM also.
-
-Two launch configurations are already included if you are importing these projects into eclipse,
-which run with or without the generated tests.
-
-A gradle build script is included, run './gradlew build' to rebuild the agent - it will be created
-as something like: `springloaded/build/libs/springloaded-1.1.5.BUILD-SNAPSHOT.jar`
-
-# Can I contribute?
-
-Sure! Just press *Fork* at the top of this github page and get coding. Before we accept pull
-requests we just need you to sign a simple contributor's agreement - which you can find
-[here](https://support.springsource.com/spring_committer_signup). Signing the contributor's
-agreement does not grant anyone commit rights to the main repository, but it does mean that we
-can accept your contributions, and you will get an author credit if we do. Active contributors
-might be asked to join the core team, and given the ability to merge pull requests.
+See [origin repository](https://github.com/spring-projects/spring-loaded.git)

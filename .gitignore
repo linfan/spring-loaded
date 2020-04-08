@@ -5,6 +5,7 @@ out/
 build/
 builds/
 superbin/
+note/
 springloaded-*.jar
 .DS_Store
 .idea/
