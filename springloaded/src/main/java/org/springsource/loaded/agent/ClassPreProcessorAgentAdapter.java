@@ -118,9 +118,14 @@ public class ClassPreProcessorAgentAdapter implements ClassFileTransformer {
 		}
 	}
 
-    private boolean isSystemEscapeClass(String className) {
-        return false;
-    }
+	private boolean isSystemEscapeClass(String className) {
+		for (String prefix : TransformEscapeClassUtils.getEscapeClassPrefixes()) {
+			if (className.startsWith(prefix)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
     private boolean isUserEscapeClass(String className) {
 		if (GlobalConfiguration.escapeClassPrefixList.size() < 1) {
